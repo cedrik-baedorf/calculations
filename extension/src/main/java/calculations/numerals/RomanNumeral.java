@@ -12,7 +12,7 @@ public enum RomanNumeral {
 
     public final int VALUE;
 
-    private RomanNumeral(char character, int value) {
+    RomanNumeral(char character, int value) {
         this.CHARACTER = character;
         this.VALUE = value;
     }

@@ -1,7 +1,6 @@
 package calculations.expressions;
 
 import calculations.exceptions.NumeralException;
-import calculations.numerals.RomanNumeral;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
