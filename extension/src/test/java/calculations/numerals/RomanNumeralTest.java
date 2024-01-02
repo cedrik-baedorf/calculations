@@ -1,8 +1,10 @@
 package calculations.numerals;
 
+import calculations.exceptions.NumeralException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,26 +25,40 @@ public class RomanNumeralTest {
         assertEquals(expectedValue, actualValue);
     }
 
+    private static Map<Character, RomanNumeral> createCharacterMap() {
+        return Map.of(
+            'I', RomanNumeral.I,
+            'V', RomanNumeral.V,
+            'X', RomanNumeral.X,
+            'L', RomanNumeral.L,
+            'C', RomanNumeral.C,
+            'D', RomanNumeral.D,
+            'M', RomanNumeral.M
+        );
+    }
+
+    private static Map<Integer, RomanNumeral> createValueMap() {
+        return Map.of(
+                1, RomanNumeral.I,
+                5, RomanNumeral.V,
+                10, RomanNumeral.X,
+                50, RomanNumeral.L,
+                100, RomanNumeral.C,
+                500, RomanNumeral.D,
+                1000, RomanNumeral.M
+        );
+    }
+
     @Test
     public void constructor_testCharacterPassing() {
-        testCharacterPassing(RomanNumeral.I, 'I');
-        testCharacterPassing(RomanNumeral.V, 'V');
-        testCharacterPassing(RomanNumeral.X, 'X');
-        testCharacterPassing(RomanNumeral.L, 'L');
-        testCharacterPassing(RomanNumeral.C, 'C');
-        testCharacterPassing(RomanNumeral.D, 'D');
-        testCharacterPassing(RomanNumeral.M, 'M');
+        for(Map.Entry<Character, RomanNumeral> entry : createCharacterMap().entrySet())
+            testCharacterPassing(entry.getValue(), entry.getKey());
     }
 
     @Test
     public void constructor_testNumericValuePassing() {
-        testNumericValuePassing(RomanNumeral.I, 1);
-        testNumericValuePassing(RomanNumeral.V, 5);
-        testNumericValuePassing(RomanNumeral.X, 10);
-        testNumericValuePassing(RomanNumeral.L, 50);
-        testNumericValuePassing(RomanNumeral.C, 100);
-        testNumericValuePassing(RomanNumeral.D, 500);
-        testNumericValuePassing(RomanNumeral.M, 1000);
+        for(Map.Entry<Integer, RomanNumeral> entry : createValueMap().entrySet())
+            testNumericValuePassing(entry.getValue(), entry.getKey());
     }
 
     @Test
@@ -82,6 +98,40 @@ public class RomanNumeralTest {
             ));
 
         assertEquals(expectedMap, actualMap);
+    }
+
+    @Test
+    public void of_char_testWithValidCharacter() {
+        for(Map.Entry<Character, RomanNumeral> entry : createCharacterMap().entrySet())
+            assertEquals(entry.getValue(), RomanNumeral.of(entry.getKey()));
+    }
+
+    @Test
+    public void of_char_testWithInvalidCharacter() {
+        Set<Character> characters = new HashSet<>();
+        for(int i = 0; i < 200; i++) {
+            characters.add((char) i);
+        }
+        characters.removeAll(RomanNumeral.characters());
+        for(char character : characters)
+            assertThrowsExactly(NumeralException.class, () -> RomanNumeral.of(character));
+    }
+
+    @Test
+    public void of_int_testWithValidCharacter() {
+        for(Map.Entry<Integer, RomanNumeral> entry : createValueMap().entrySet())
+            assertEquals(entry.getValue(), RomanNumeral.of(entry.getKey()));
+    }
+
+    @Test
+    public void of_int_testWithInvalidCharacter() {
+        Set<Integer> values = new HashSet<>();
+        for(int i = 0; i < 1000; i++) {
+            values.add(i);
+        }
+        values.removeAll(RomanNumeral.numericValues());
+        for(int value : values)
+            assertThrowsExactly(NumeralException.class, () -> RomanNumeral.of(value));
     }
 
 }
