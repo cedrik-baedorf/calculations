@@ -14,7 +14,7 @@ public enum RomanNumeral {
 
     public final int VALUE;
 
-    private final String
+    private static final String
         MSG_INVALID_NUMERAL = "%s %s does not match any of the valid values for %s : %s.";
 
     RomanNumeral(char character, int value) {
@@ -49,7 +49,7 @@ public enum RomanNumeral {
                     .toList()
                     .get(0);
         } catch (ArrayIndexOutOfBoundsException exception) {
-            throw new NumeralException(String.format("Numeral", character, "characters", characters()), exception);
+            throw new NumeralException(String.format(MSG_INVALID_NUMERAL, "Numeral", character, "characters", characters()), exception);
         }
     }
 
@@ -60,7 +60,7 @@ public enum RomanNumeral {
                     .toList()
                     .get(0);
         } catch (ArrayIndexOutOfBoundsException exception) {
-            throw new NumeralException(String.format("Value", value, "numeric values", numericValues()), exception);
+            throw new NumeralException(String.format(MSG_INVALID_NUMERAL, "Value", value, "numeric values", numericValues()), exception);
         }
     }
 
