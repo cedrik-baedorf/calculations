@@ -42,7 +42,14 @@ public enum RomanNumeral {
                 .collect(Collectors.toSet());
     }
 
-    public static RomanNumeral of(char character) {
+    /**
+     * This static method returns a {@link RomanNumeral} of the <code>character: {@link Character}</code> parameter.
+     * If no such {@link RomanNumeral} exists, a {@link NumeralException} shall be thrown.
+     * @param character {@link Character} of the {@link RomanNumeral} in question.
+     * @return {@link RomanNumeral} of the {@link Character} provided.
+     * @throws NumeralException Exception if no corresponding {@link RomanNumeral} is found.
+     */
+    public static RomanNumeral of(char character) throws NumeralException {
         try {
             return Arrays.stream(values())
                     .filter(numeral -> numeral.CHARACTER == character)
@@ -53,7 +60,14 @@ public enum RomanNumeral {
         }
     }
 
-    public static RomanNumeral of(int value) {
+    /**
+     * This static method returns a {@link RomanNumeral} of the <code>value: {@link Integer}</code> parameter.
+     * If no such {@link RomanNumeral} exists, a {@link NumeralException} shall be thrown.
+     * @param value {@link Integer} of the {@link RomanNumeral} in question.
+     * @return {@link RomanNumeral} of the {@link Integer} provided.
+     * @throws NumeralException Exception if no corresponding {@link RomanNumeral} is found.
+     */
+    public static RomanNumeral of(int value) throws NumeralException {
         try {
             return Arrays.stream(values())
                     .filter(numeral -> numeral.VALUE == value)
@@ -62,6 +76,64 @@ public enum RomanNumeral {
         } catch (ArrayIndexOutOfBoundsException exception) {
             throw new NumeralException(String.format(MSG_INVALID_NUMERAL, "Value", value, "numeric values", numericValues()), exception);
         }
+    }
+
+    public static boolean greater(RomanNumeral numeral1, RomanNumeral numeral2) {
+        return numeral1.greater(numeral2);
+    }
+
+    public boolean greater(RomanNumeral numeral) {
+        return this.VALUE > numeral.VALUE;
+    }
+
+    public static boolean lesser(RomanNumeral numeral1, RomanNumeral numeral2) {
+        return numeral1.lesser(numeral2);
+    }
+
+    public boolean lesser(RomanNumeral numeral) {
+        return this.VALUE < numeral.VALUE;
+    }
+
+    public static boolean equal(RomanNumeral numeral1, RomanNumeral numeral2) {
+        return numeral1.equal(numeral2);
+    }
+
+    public boolean equal(RomanNumeral numeral) {
+        return this.VALUE == numeral.VALUE;
+    }
+
+    public static boolean greaterOrEqual(RomanNumeral numeral1, RomanNumeral numeral2) {
+        return numeral1.greaterOrEqual(numeral2);
+    }
+
+    public boolean greaterOrEqual(RomanNumeral numeral) {
+        return this.greater(numeral) || this.equal(numeral);
+    }
+
+    public static boolean lesserOrEqual(RomanNumeral numeral1, RomanNumeral numeral2) {
+        return numeral1.lesserOrEqual(numeral2);
+    }
+
+    public boolean lesserOrEqual(RomanNumeral numeral) {
+        return this.lesser(numeral) || this.equal(numeral);
+    }
+
+    public static boolean between(RomanNumeral numeral1, RomanNumeral numeral2, RomanNumeral numeral3) {
+        return numeral1.between(numeral2, numeral3);
+    }
+
+    public boolean between(RomanNumeral numeral1, RomanNumeral numeral2) {
+        return
+            this.greater(numeral1.greater(numeral2) ? numeral2 : numeral1) &&
+            this.lesser(numeral1.lesser(numeral2) ? numeral2 : numeral1);
+    }
+
+    public static boolean betweenOrEqual(RomanNumeral numeral1, RomanNumeral numeral2, RomanNumeral numeral3) {
+        return numeral1.betweenOrEqual(numeral2, numeral3);
+    }
+
+    public boolean betweenOrEqual(RomanNumeral numeral1, RomanNumeral numeral2) {
+        return this.between(numeral1, numeral2) || this.equal(numeral1) || this.equal(numeral2);
     }
 
 }

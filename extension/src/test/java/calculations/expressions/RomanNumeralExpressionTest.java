@@ -1,10 +1,14 @@
 package calculations.expressions;
 
 import calculations.exceptions.NumeralException;
+import calculations.numerals.RomanNumeral;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,6 +60,19 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
         );
     }
 
+    private List<String> createInvalidTestData() {
+        return List.of(
+            "",
+            "B",
+            "MCVBI",
+            "IIII",
+            "IIV",
+            "MMMM",
+            "IVX",
+            "XXXIXXX"
+        );
+    }
+
     @Test
     public void decimalValue_testAllAllowedValues() {
         NumeralExpressionTest.decimalValue_testSetterAndGetter(expression, RomanNumeralExpression.MIN, RomanNumeralExpression.MAX);
@@ -83,7 +100,10 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
 
     @Test
     public void setValue_String_invalidNumerals() {
+        List<String> testData = createInvalidTestData();
 
+        for(String expression : testData)
+            assertThrowsExactly(NumeralException.class, () -> this.expression.setValue(expression));
     }
 
     @Test
@@ -91,7 +111,10 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
         Map<String, Double> testData = createTestData();
 
         for(Map.Entry<String, Double> entry : testData.entrySet()) {
-            expression.setValue(entry.getKey());
+            expression.setValue(entry.getKey().chars()
+                    .mapToObj(character -> RomanNumeral.of((char) character))
+                    .toArray(RomanNumeral[]::new)
+            );
             assertEquals(entry.getValue(), expression.getDecimalValue());
         }
     }
@@ -103,12 +126,25 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
 
     @Test
     public void setValue_charArray_validNumerals() {
+        Map<String, Double> testData = createTestData();
 
+        for(Map.Entry<String, Double> entry : testData.entrySet()) {
+            expression.setValue(entry.getKey().toCharArray());
+            assertEquals(entry.getValue(), expression.getDecimalValue());
+        }
     }
 
     @Test
     public void setValue_charArray_invalidNumerals() {
 
+    }
+
+    @Test
+    public void isValidExpression_validExpression() {
+        List<String> testData = createInvalidTestData();
+
+        for(String expression : testData)
+            assertFalse(RomanNumeralExpression.isValidExpression(expression));
     }
 
 }
