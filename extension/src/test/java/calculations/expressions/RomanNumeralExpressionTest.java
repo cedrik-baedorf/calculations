@@ -5,10 +5,8 @@ import calculations.numerals.RomanNumeral;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -121,7 +119,14 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
 
     @Test
     public void setValue_RomanNumeralArray_invalidNumerals() {
+        List<String> testData = createInvalidTestData();
 
+        for(String expression : testData)
+            assertThrowsExactly(NumeralException.class, () -> this.expression.setValue(
+                expression.chars()
+                    .mapToObj(character -> RomanNumeral.of((char) character))
+                    .toArray(RomanNumeral[]::new)
+            ));
     }
 
     @Test
@@ -136,15 +141,38 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
 
     @Test
     public void setValue_charArray_invalidNumerals() {
+        List<String> testData = createInvalidTestData();
 
+        for(String expression : testData)
+            assertThrowsExactly(NumeralException.class, () -> this.expression.setValue(expression.toCharArray()));
     }
 
     @Test
-    public void isValidExpression_validExpression() {
+    public void isValidExpression_String_validExpression() {
         List<String> testData = createInvalidTestData();
 
         for(String expression : testData)
             assertFalse(RomanNumeralExpression.isValidExpression(expression));
+    }
+
+    @Test
+    public void isValidExpression_RomanNumeralArray_validExpression() {
+        List<String> testData = createInvalidTestData();
+
+        for(String expression : testData)
+            assertFalse(RomanNumeralExpression.isValidExpression(
+                expression.chars()
+                    .mapToObj(character -> RomanNumeral.of((char) character))
+                    .toArray(RomanNumeral[]::new)
+            ));
+    }
+
+    @Test
+    public void isValidExpression_charArray_validExpression() {
+        List<String> testData = createInvalidTestData();
+
+        for(String expression : testData)
+            assertFalse(RomanNumeralExpression.isValidExpression(expression.toCharArray()));
     }
 
 }

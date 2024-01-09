@@ -4,7 +4,6 @@ import calculations.exceptions.NumeralException;
 import calculations.numerals.RomanNumeral;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
