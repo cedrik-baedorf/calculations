@@ -149,6 +149,35 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
 
     @Test
     public void isValidExpression_String_validExpression() {
+        List<String> testData = createTestData().keySet().stream().toList();
+
+        for(String expression : testData)
+            assertTrue(RomanNumeralExpression.isValidExpression(expression));
+    }
+
+    @Test
+    public void isValidExpression_RomanNumeralArray_validExpression() {
+        List<String> testData = createTestData().keySet().stream().toList();
+
+        for(String expression : testData)
+            assertTrue(RomanNumeralExpression.isValidExpression(
+                    expression.chars()
+                            .filter(character -> RomanNumeral.characters().contains((char) character))
+                            .mapToObj(character -> RomanNumeral.of((char) character))
+                            .toArray(RomanNumeral[]::new)
+            ));
+    }
+
+    @Test
+    public void isValidExpression_charArray_validExpression() {
+        List<String> testData = createTestData().keySet().stream().toList();
+
+        for(String expression : testData)
+            assertTrue(RomanNumeralExpression.isValidExpression(expression.toCharArray()));
+    }
+
+    @Test
+    public void isValidExpression_String_invalidExpression() {
         List<String> testData = createInvalidTestData();
 
         for(String expression : testData)
@@ -156,19 +185,22 @@ public class RomanNumeralExpressionTest implements NumeralExpressionTest {
     }
 
     @Test
-    public void isValidExpression_RomanNumeralArray_validExpression() {
+    public void isValidExpression_RomanNumeralArray_invalidExpression() {
         List<String> testData = createInvalidTestData();
 
-        for(String expression : testData)
+        for(String expression : testData) {
+            if (!expression.chars().allMatch(c -> RomanNumeral.characters().contains((char) c)))
+                continue;
             assertFalse(RomanNumeralExpression.isValidExpression(
-                expression.chars()
-                    .mapToObj(character -> RomanNumeral.of((char) character))
-                    .toArray(RomanNumeral[]::new)
+                    expression.chars()
+                            .mapToObj(character -> RomanNumeral.of((char) character))
+                            .toArray(RomanNumeral[]::new)
             ));
+        }
     }
 
     @Test
-    public void isValidExpression_charArray_validExpression() {
+    public void isValidExpression_charArray_invalidExpression() {
         List<String> testData = createInvalidTestData();
 
         for(String expression : testData)
